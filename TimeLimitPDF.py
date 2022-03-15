@@ -24,6 +24,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 """
 import os
 import pathlib
+import uuid
 import dateparser
 from PyPDF2 import PdfFileReader, PdfFileWriter
 import chevron
@@ -63,8 +64,27 @@ OUTPUT_STR = 'OUTPUT: '
 DONE_STR = 'DONE.'
 
 PDF_INSERT_TEXT = """
+const FIELDS = [{{fields}}]
+
+function ShowFields()
+{
+   for(var k = 0;  k < FIELDS.length; k++)
+    {
+        this.getField(FIELDS[k]).display = display.visible; 
+    }
+}
+
+function HideFields()
+{
+    for(var k = 0;  k < FIELDS.length; k++)
+    {
+        this.getField(FIELDS[k]).display = display.hidden; 
+    }
+}
+
 function TurnOnOCGs(doc, page) 
 {
+    HideFields();
     var arr = doc.getOCGs(page);
     if (!arr) return;
     for (var k = 0; k < arr.length; k++)
@@ -88,7 +108,7 @@ function CheckExpire(verbose, trg)
     if(current_time.getTime() > end_time)
     {
         if(verbose) app.alert("The document has expired and cannot be read.");
-        this.closeDoc();
+        this.closeDoc(true);  // close the document without saving
     }
     else
     {   
@@ -109,13 +129,20 @@ timeout = app.setInterval("CheckExpireNonVerbose()", 1000);
 """
 
 
-def render_javascript(date):
+def render_javascript(date, fields):
+    sfields = ''
+    for field in fields:
+        sfields += "'"
+        sfields += field
+        sfields += "'"
+        sfields += ","
     d = {
         'year': date.year,
         'monthIndex': date.month-1,  # Javascript months are 0...11
         'day': date.day,
         'hours': date.hour,
-        'minutes': date.minute
+        'minutes': date.minute,
+        'fields': sfields
     }
     txt = chevron.render(PDF_INSERT_TEXT, d)
     return txt
@@ -125,10 +152,6 @@ def render_javascript(date):
 def add_javascript(fn_out, fn_in, text):
     pdf_writer = PdfFileWriter()
     pdf_reader = PdfFileReader(open(fn_in, "rb"))
-
-    # for x in range(0, pdf_reader.getNumPages()):
-    #     p = pdf_reader.getPage(x)
-    #     pdf_writer.addPage(p)
     pdf_writer.cloneDocumentFromReader(pdf_reader)
     pdf_writer.addJS(text)
 
@@ -137,8 +160,8 @@ def add_javascript(fn_out, fn_in, text):
 # DONE
 
 
-def add_javascript_time(fn_out, fn_in, date):
-    add_javascript(fn_out, fn_in, render_javascript(date))
+def add_javascript_time(fn_out, fn_in, date, fields):
+    add_javascript(fn_out, fn_in, render_javascript(date, fields))
 # DONE
 
 
@@ -147,12 +170,24 @@ def make_layers(fn_out, fn_in):
     doc_out = fitz.Document()
     xc = doc_out.add_ocg('hide', on=True)  # hide layers by default
     n = doc_in.page_count
+    field_name = []
     for k in range(n):
         page_in = doc_in[k]
         page_out = doc_out.new_page()
+        r = page_in.rect
         page_out.show_pdf_page(page_in.rect, doc_in, pno=k, oc=xc)
+        w = fitz.Widget()
+        fname = uuid.uuid4().hex
+        w.field_name = fname
+        w.fill_color = [1, 1, 1, 1]
+        w.rect = r
+        w.field_type = 3  # covers the entire page in web browser
+        w.xref = doc_out.get_new_xref()
+        page_out.add_widget(w)
+        field_name.append(fname)
     doc_in.close()
     doc_out.save(fn_out)
+    return field_name
 # DONE
 
 
@@ -174,8 +209,8 @@ def make_layers_add_javascript(fn_out, fn_in, time_str):
     date = dateparser.parse(time_str)
     if date is None:
         raise ValueError('The endtime could not be parsed.')
-    make_layers(fn_out, fn_in)
-    add_javascript_time(fn_out, fn_out, date)
+    field_names = make_layers(fn_out, fn_in)
+    add_javascript_time(fn_out, fn_out, date, field_names)
     replace_tag_javascript(fn_out)
 # DONE
 
@@ -271,3 +306,4 @@ def run(filein, fileout, directory, postfix, endtime):
 
 if __name__ == '__main__':
     run()
+

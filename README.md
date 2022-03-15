@@ -23,6 +23,7 @@ indicating that the document is not to be opened.
 
 For the technically-inclined, it is not difficult to re-open the PDF file after the set timeout.  The code provides details.
 However, this software is expected to be useful in some situations.
+The software is also partially useful for PDFs viewed in web browsers.
 
 
 ## Getting Started

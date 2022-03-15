@@ -1,6 +1,10 @@
 # test directory
 test/
 
+# misc 
+*.pdf
+*.docx
+
 # idea files for Pycharm IDE 
 .idea
 
