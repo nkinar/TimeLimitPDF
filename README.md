@@ -1,27 +1,32 @@
 # TimeLimitPDF
 
-A simple utility for closing a PDF and hiding the document text and images when time expires.
-The security offered by this utility is sufficient for lab-based final exams in a computer lab,
+A simple utility for editing a PDF so that the PDF automatically is not
+usable when a set time expires.
+The security offered by this utility is sufficient for some scenarios,
 but is not intended to be comprehensive.  A human-readable time can be used
-to set the timeout (i.e. "today at 2:30 PM").
+to set the timeout (i.e. "today at 2:30 PM").  The PDF can be sent to another
+person by e-mail and a separate program or plugin is not required to be installed
+on each computer.
 
-![Photo](./images/timer.jpg)
+![Example Run](./images/example.jpg)
+
+![Displayed Dialog Box](./images/window.jpg)
 
 
 ## Motivation
 
 Academic assessment situations often involve exams that are time limited.  For use in a lab or exam,
-PDF documents are often required to be closed at a given time.  This software package can be
-used to set a date and time when the PDF file should not be opened.  The PDF file with automatically
+PDF documents are required to be closed at a given time.  This software package can be
+used to set a date and time when the PDF file should not be opened.  The PDF file will automatically
 close after the set date and time.  Successive PDF document open events will show a dialog box
 indicating that the document is not to be opened.
 
 For the technically-inclined, it is not difficult to re-open the PDF file after the set timeout.  The code provides details.
-However, this software is expected to be useful in some academic situations.
+However, this software is expected to be useful in some situations.
 
 
 ## Getting Started
-Ensure that Python3 is installed.  The cx_Freeze utility is used to build an executable
+Ensure that Python3 is installed.  The `cx_Freeze` utility is used to build an executable
 that can be installed on a number of systems (Windows, Linux, OS X).
 
 ```
@@ -34,7 +39,7 @@ pip install PyMuPDF dateparser chevron fitz click tqdm cx_Freeze
 * The reader is similar to Adobe Acrobat and the reader supports the Adobe Javascript API.
 * The PDF reader supports OCGs and layers.
 * The source PDF is not encrypted. (A password can be added after this program
-  has been used to process the PDF.)
+  has been used.)
 
 ### Example Usage
 
@@ -72,10 +77,6 @@ Options:
   --help                Show this message and exit.
 ```
 
-![Example Run](./images/example.jpg)
-
-![Displayed Dialog Box](./images/window.jpg)
-
 
 ### Documentation
 
@@ -93,3 +94,7 @@ Developed after a delightful conversation with my good friend Reza Bahremand
 (https://twitter.com/AbdolrezaBahrem) where we both wondered if a PDF file
 can be edited to automatically "time out."  Since we both work in academia,
 this utility might be useful in a number of different circumstances.
+
+## Visual Meditation
+
+![Photo](./images/timer.jpg)
