@@ -1,3 +1,3 @@
-"Starting..."
-python setup.py build &&
-"DONE."
+"Start" &&
+pyinstaller -F TimeLimitPDF.py # required to build to one file
+"Done build."

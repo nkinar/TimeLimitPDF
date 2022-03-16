@@ -31,7 +31,7 @@ Ensure that Python3 is installed.  The `cx_Freeze` utility is used to build an e
 that can be installed on a number of systems (Windows, Linux, OS X).
 
 ```
-pip install PyMuPDF dateparser chevron fitz click tqdm cx_Freeze
+pip install PyMuPDF dateparser chevron fitz click tqdm pyinstaller
 ```
 
 ### Assumptions
