@@ -23,7 +23,9 @@ indicating that the document is not to be opened.
 
 For the technically-inclined, it is not difficult to re-open the PDF file after the set timeout.  The code provides details.
 However, this software is expected to be useful in some situations.
-The software is also partially useful for PDFs viewed in web browsers.
+The software is also useful for PDFs viewed in web browsers since the
+PDF cannot be printed and the PDF text and images will show up as covered
+by black squares.
 
 
 ## Getting Started
