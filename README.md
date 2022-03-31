@@ -29,8 +29,11 @@ by black squares.
 
 
 ## Getting Started
-Ensure that Python3 is installed.  The `cx_Freeze` utility is used to build an executable
-that can be installed on a number of systems (Windows, Linux, OS X).
+
+Ensure that Python3 is installed.  The `pyinstaller` utility is used
+to build an executable that can be installed on a number of systems
+(Windows, Linux, OS X). The Powershell script (`generate.ps1`)
+can be used to run pyinstaller.
 
 ```
 pip install PyMuPDF dateparser chevron fitz click tqdm pyinstaller
